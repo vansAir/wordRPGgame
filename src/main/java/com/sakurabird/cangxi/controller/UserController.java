@@ -45,6 +45,12 @@ public class UserController {
         return ResponseData.success(userService.getUserInfo());
     }
 
+    @ApiOperation(value = "通过排行进入的用户详情接口")
+    @GetMapping("/info/{id}")
+    public ResponseData getUserInfo(@PathVariable("id") Integer id) {
+        return ResponseData.success(userService.getUserInfo(id));
+    }
+
     @ApiOperation(value = "获取排行榜")
     @GetMapping("/phb")
     public ResponseData getPhb() {

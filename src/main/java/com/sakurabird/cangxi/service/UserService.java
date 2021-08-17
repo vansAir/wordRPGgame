@@ -3,6 +3,7 @@ package com.sakurabird.cangxi.service;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sakurabird.cangxi.constvalue.GlobalConst;
@@ -145,6 +146,20 @@ public class UserService extends ServiceImpl<UserMapper, Users> {
         computeData();
         Users users=JSONUtil.toBean(redisTemplate.boundValueOps(GlobalConst.USDATA+id).get().toString(),Users.class);
         assembleData(users);
+        return users;
+    }
+
+    /**
+    *@author vsans@sina.cn
+    *@date 2021/2/2
+    *@params
+    *@return
+    *@desc 通过排行进入的用户详情接口要添加装备具体
+    **/
+    public Users getUserInfo(Integer id){
+        Users users=JSONUtil.toBean(redisTemplate.boundValueOps(GlobalConst.USDATA+id).get().toString(),Users.class);
+        assembleData(users);
+        users.setEqus(userEquipmentMapper.selectList(new LambdaQueryWrapper<UserEquipment>().eq(UserEquipment::getUserId,id)));
         return users;
     }
 
@@ -350,7 +365,7 @@ public class UserService extends ServiceImpl<UserMapper, Users> {
     *@return
     *@desc 计算用户当前属性值
     **/
-    public void  computeData(Integer id){
+    public Users computeData(Integer id){
         Users cunrrentUser=userMapper.selectById(id);
         cunrrentUser.setUserPassword("");
 
@@ -368,6 +383,7 @@ public class UserService extends ServiceImpl<UserMapper, Users> {
                 +cunrrentUser.getAttackProbability()*100.0+cunrrentUser.getMissProbability()*100.0+cunrrentUser.getKillProbability()*100.0+cunrrentUser.getCriticalHit()*100.0
                 +cunrrentUser.getCriticalDmg()*200+cunrrentUser.getStrikeBack()*100.0+cunrrentUser.getDoubleHit()*100.0;
         redisTemplate.opsForZSet().add("RANK", cunrrentUser.getId(), combat);
+        return cunrrentUser;
 
     }
 

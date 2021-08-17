@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * (Users)实体类
@@ -167,5 +168,11 @@ public class Users implements Serializable {
      */
     @TableField(exist=false)
     private StringBuffer thiefThing;
+
+    /**
+     * 用户装备详情
+     */
+    @TableField(exist=false)
+    private List<UserEquipment> equs;
 
 }
