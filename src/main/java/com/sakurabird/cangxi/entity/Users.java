@@ -86,6 +86,11 @@ public class Users implements Serializable {
     @ApiModelProperty(value = "暴击几率")
     private Double criticalHit;
     /**
+     * 暴击伤害
+     */
+    @ApiModelProperty(value = "暴击伤害")
+    private Double criticalDmg;
+    /**
      * 偷窃率
      */
     @ApiModelProperty(value = "偷窃率")

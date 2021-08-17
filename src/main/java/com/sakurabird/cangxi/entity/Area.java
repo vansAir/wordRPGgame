@@ -77,6 +77,11 @@ public class Area implements Serializable {
     @ApiModelProperty(value = "暴击几率")
     private Double criticalHit;
     /**
+     * 暴击伤害
+     */
+    @ApiModelProperty(value = "暴击伤害")
+    private Double criticalDmg;
+    /**
      * 地点描述
      */
     @ApiModelProperty(value = "地点描述")

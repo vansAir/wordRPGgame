@@ -136,10 +136,10 @@ public class FightService {
                 }
             }
 
-            //计算即死 成功扣除当前10%的血量
+            //计算即死 成功扣除当前30%的血量
             k= RandomUtil.randomDouble(100.0);
             if(k<a.getAttackProbability()){
-                double dmg=d.getHealth()*0.1;
+                double dmg=d.getHealth()*0.3;
                 d.setHealth(d.getHealth()-dmg);
                 situation.append(killStr(an,dn,dmg));
             }
@@ -149,7 +149,7 @@ public class FightService {
             //计算暴击
             c=RandomUtil.randomDouble(100.0);
             if(c<a.getCriticalHit()){
-                currentDmg*=2;
+                currentDmg*=(2+a.getCriticalDmg()/100);
                 situation.append(criStr(an,dn));
             }
 

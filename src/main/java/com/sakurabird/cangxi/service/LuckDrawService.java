@@ -101,7 +101,7 @@ public class LuckDrawService {
         //数量减一
         backPackageService.manageGoods(goodsMapper.selectById(GoodsConst.CHANGE_EQU_PAPER),-1);
         //抽取评级
-        String rank=randomRank();
+        String rank=randomEquRank();
         //抽取装备
         UserEquipment ue = equiService.randomEquipment(id,type,rank);
 
@@ -146,6 +146,7 @@ public class LuckDrawService {
     **/
     public synchronized ResponseData strengThen(Integer type,Integer magic){
         Integer id = HttpContext.getId();
+
         //处理强化类型
         Map<String,Boolean> magicMap=checkMagic(magic);
 
@@ -154,21 +155,24 @@ public class LuckDrawService {
         ueqw.eq("user_id",id);
         ueqw.eq("equ_type",type);
         UserEquipment ue = userEquipmentMapper.selectOne(ueqw);
-        //计算所需的石头
-        int neednum=computeStone(ue);
-        backPackageService.manageGoods(goodsMapper.selectById(GoodsConst.STRENGTHEN_STONE),-neednum);
+
         //处理+10卷
         if(magicMap.get("10")){
             ue.setLevel(10);
             userEquipmentMapper.updateById(ue);
             return ResponseData.success(ue);
         }
+
         //处理+12卷
         if(magicMap.get("12")){
             ue.setLevel(12);
             userEquipmentMapper.updateById(ue);
             return ResponseData.success(ue);
         }
+
+        //计算所需的石头
+        int neednum=computeStone(ue);
+        backPackageService.manageGoods(goodsMapper.selectById(GoodsConst.STRENGTHEN_STONE),-neednum);
 
         //开始强化
         int curand=RandomUtil.randomInt(101);
@@ -290,6 +294,21 @@ public class LuckDrawService {
         }
 
         return magicMap;
+    }
+
+    /**
+    *@author vsans@sina.cn
+    *@date 2021/8/17
+    *@params
+    *@return
+    *@desc
+    **/
+    public String randomEquRank(){
+        String rank ="N";
+        while ("EX".equals(rank)||"Z".equals(rank)){
+            rank=randomRank();
+        }
+        return rank;
     }
 
     /**

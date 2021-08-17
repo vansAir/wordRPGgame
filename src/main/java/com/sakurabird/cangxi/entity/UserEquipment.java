@@ -80,6 +80,11 @@ public class UserEquipment implements Serializable {
     @ApiModelProperty(value = "暴击几率")
     private Double criticalHit;
     /**
+     * 暴击伤害
+     */
+    @ApiModelProperty(value = "暴击伤害")
+    private Double criticalDmg;
+    /**
      * 用户id
      */
     @ApiModelProperty(value = "用户id")

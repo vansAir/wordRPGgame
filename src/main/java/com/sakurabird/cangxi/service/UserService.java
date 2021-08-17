@@ -363,9 +363,10 @@ public class UserService extends ServiceImpl<UserMapper, Users> {
         //绑定到redis
         redisTemplate.boundValueOps(GlobalConst.USDATA +id).set(JSONUtil.parse(cunrrentUser).toString());
         DecimalFormat df = new DecimalFormat("0.00");
+        //计算战斗力
         double combat=cunrrentUser.getAttack()+cunrrentUser.getDefense()+cunrrentUser.getHealth()+cunrrentUser.getSpeed()/10+cunrrentUser.getLucky()/3
                 +cunrrentUser.getAttackProbability()*100.0+cunrrentUser.getMissProbability()*100.0+cunrrentUser.getKillProbability()*100.0+cunrrentUser.getCriticalHit()*100.0
-                +cunrrentUser.getStrikeBack()*100.0+cunrrentUser.getDoubleHit()*100.0;
+                +cunrrentUser.getCriticalDmg()*200+cunrrentUser.getStrikeBack()*100.0+cunrrentUser.getDoubleHit()*100.0;
         redisTemplate.opsForZSet().add("RANK", cunrrentUser.getId(), combat);
 
     }
@@ -385,6 +386,7 @@ public class UserService extends ServiceImpl<UserMapper, Users> {
                     cunrrentUser.setSpeed(e.getSpeed()*x+cunrrentUser.getSpeed());
                     cunrrentUser.setLucky(e.getLucky()*x+cunrrentUser.getLucky());
                     cunrrentUser.setCriticalHit(e.getCriticalHit()*x+cunrrentUser.getCriticalHit());
+                    cunrrentUser.setCriticalDmg(e.getCriticalDmg()*x+cunrrentUser.getCriticalDmg());
                     cunrrentUser.setStrikeBack(e.getStrikeBack()*x+cunrrentUser.getStrikeBack());
                     cunrrentUser.setDoubleHit(e.getDoubleHit()*x+cunrrentUser.getDoubleHit());
                     cunrrentUser.setKillProbability(e.getKillProbability()*x+cunrrentUser.getKillProbability());
@@ -406,6 +408,7 @@ public class UserService extends ServiceImpl<UserMapper, Users> {
         cunrrentUser.setSpeed(area.getSpeed()*cunrrentUser.getSpeed());
         cunrrentUser.setLucky(area.getLucky()*cunrrentUser.getLucky());
         cunrrentUser.setCriticalHit(area.getCriticalHit()*cunrrentUser.getCriticalHit());
+        cunrrentUser.setCriticalDmg(area.getCriticalDmg()*cunrrentUser.getCriticalDmg());
         cunrrentUser.setStrikeBack(area.getStrikeBack()*cunrrentUser.getStrikeBack());
         cunrrentUser.setDoubleHit(area.getDoubleHit()*cunrrentUser.getDoubleHit());
         cunrrentUser.setKillProbability(area.getKillProbability()*cunrrentUser.getKillProbability());
@@ -436,7 +439,8 @@ public class UserService extends ServiceImpl<UserMapper, Users> {
         Double d=users.getDoubleHit();
         Double s=users.getStrikeBack();
         Double c=users.getCriticalHit();
-        if(((t+d+s+c)*10+l)>25){
+        Double cd=users.getCriticalDmg();
+        if(((t+d+s+c)*10+l+cd*2)>25){
             throw new UserException(ErrorCode.USER_ERROR_ANSWER);
         }
 
@@ -451,6 +455,7 @@ public class UserService extends ServiceImpl<UserMapper, Users> {
         users.setKillProbability(RandomUtil.randomDouble(0.1,0.5));
         users.setDoubleHit(d+RandomUtil.randomDouble(1.00,2.00));
         users.setCriticalHit(c+RandomUtil.randomDouble(1.00,2.00));
+        users.setCriticalDmg(cd);
         users.setStrikeBack(s+RandomUtil.randomDouble(1.00,2.00));
         users.setThief(t+RandomUtil.randomDouble(1.00,2.00));
         users.setAttackProbability(RandomUtil.randomDouble(1.00,2.00));

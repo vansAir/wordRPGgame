@@ -77,6 +77,11 @@ public class Equipment implements Serializable {
     @ApiModelProperty(value = "暴击几率")
     private Double criticalHit;
     /**
+     * 暴击伤害
+     */
+    @ApiModelProperty(value = "暴击伤害")
+    private Double criticalDmg;
+    /**
      * 装备评级
      */
     @ApiModelProperty(value = "装备评级")
